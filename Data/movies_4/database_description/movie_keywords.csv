@@ -1,0 +1,6 @@
+original_column_name,column_name,column_description,data_format,value_description
+movie_id,movie id,"the id of the movie 
+Maps to movie(movie_id)",integer,
+keyword_id,keyword id,"the id of the movie keyword
+Maps to keyword(keyword_id)",integer,"commonsense evidence:
+A movie may have many keywords. Audience could get the genre of the movie according to the movie keywords. "

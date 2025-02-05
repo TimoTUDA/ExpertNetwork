@@ -1,0 +1,5 @@
+original_column_name,column_name,column_description,data_format,value_description
+movie_id,movie id,"the id of the movie 
+Maps to movie(movie_id)",integer,
+genre_id,genre id,"the id of the movie genre
+Maps to genre(genre_id)",integer,

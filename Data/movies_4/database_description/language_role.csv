@@ -1,0 +1,4 @@
+original_column_name,column_name,column_description,data_format,value_description
+role_id,role id,the unique identifier of the language id,integer,
+language_role,language role,the language role,text,"commonsense evidence:
+In the context of language roles in a movie or other audio-visual production, ""original"" and ""spoken"" refer to the languages in which the movie was originally produced, and the languages spoken by the characters in the movie, respectively."

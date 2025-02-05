@@ -1,0 +1,3 @@
+original_column_name,column_name,column_description,data_format,value_description
+keyword_id,keyword id,the unique identifier of the keyword,integer,
+keyword_name, keyword name,the keyword,text,

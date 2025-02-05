@@ -1,0 +1,3 @@
+original_column_name,column_name,column_description,data_format,value_description
+person_id,person id,the unique identifier of the person,integer,
+person_name,person name,the name of the person,text,

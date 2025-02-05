@@ -1,0 +1,20 @@
+original_column_name,column_name,column_description,data_format,value_description
+movie_id,movie id,the unique identifier of the movie,integer,
+title,,the title of the movie,text,
+budget,,the budget for the movie,integer,"commonsense evidence:
+If a movie has higher popularity, it means that it is well-liked by a large number of people. This can be determined by looking at the movie's ratings and reviews, as well as the box office performance and overall buzz surrounding the film. Higher popularity often translates to more success for the movie, both financially and critically."
+homepage,,the homepage of the movie,text,
+overview,,the overview of the movie,text,
+popularity,,the popularity of the movie,real,"commonsense evidence:
+If a movie has higher popularity, it means that it is well-liked by a large number of people. This can be determined by looking at the movie's ratings and reviews, as well as the box office performance and overall buzz surrounding the film. Higher popularity often translates to more success for the movie, both financially and critically."
+release_date,release date,the release date of the movie,date,
+revenue,,the revenue of the movie,integer,"commonsense evidence:
+A higher vote average indicates that a greater proportion of people who have seen the movie have given it positive ratings."
+runtime,,the runtime of the movie,integer,
+movie_status,,"the status of the movie
+The only value of this column is 'Released'. ",text,
+tagline,,the tagline of the movie,text,
+vote_average,vote average,the average vote for the movie,real,"commonsense evidence:
+A higher vote average indicates that a greater proportion of people who have seen the movie have given it positive ratings."
+vote_count,vote count ,the vote count for the movie,integer,"commonsense evidence:
+If a movie has a higher vote average and vote count, it means that it has been well-received by audiences and critics. A higher vote count means that more people have rated the movie, which can indicate a greater level of interest in the film."

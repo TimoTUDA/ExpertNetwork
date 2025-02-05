@@ -1,0 +1,124 @@
+{
+    "Database": "/home/timo/ExpertNetwork/Data/movies_4/movies_4.sqlite",
+    "SQL": "SELECT T4.department_name FROM movie AS T1 INNER JOIN movie_crew AS T2 ON T1.movie_id = T2.movie_id INNER JOIN person AS T3 ON T2.person_id = T3.person_id INNER JOIN department AS T4 ON T2.department_id = T4.department_id WHERE T3.person_name = 'Marcia Ross' AND T1.title = 'Reign of Fire'",
+    "join_count": 3,
+    "question": "For the movie \"Reign of Fire\", which department was Marcia Ross in?",
+    "evidence": "movie \"Reign of Fire\" refers to title = 'Reign of Fire'; which department refers to department_name",
+    "RelatedTables": {
+        "country": [
+            "country_id",
+            "country_iso_code",
+            "country_name"
+        ],
+        "department": [
+            "department_id",
+            "department_name"
+        ],
+        "gender": [
+            "gender_id",
+            "gender"
+        ],
+        "genre": [
+            "genre_id",
+            "genre_name"
+        ],
+        "keyword": [
+            "keyword_id",
+            "keyword_name"
+        ],
+        "language": [
+            "language_id",
+            "language_code",
+            "language_name"
+        ],
+        "language_role": [
+            "role_id",
+            "language_role"
+        ],
+        "movie": [
+            "movie_id",
+            "title",
+            "budget",
+            "homepage",
+            "overview",
+            "popularity",
+            "release_date",
+            "revenue",
+            "runtime",
+            "movie_status",
+            "tagline",
+            "vote_average",
+            "vote_count"
+        ],
+        "movie_genres": [
+            "movie_id",
+            "genre_id"
+        ],
+        "movie_languages": [
+            "movie_id",
+            "language_id",
+            "language_role_id"
+        ],
+        "person": [
+            "person_id",
+            "person_name"
+        ],
+        "movie_crew": [
+            "movie_id",
+            "person_id",
+            "department_id",
+            "job"
+        ],
+        "production_company": [
+            "company_id",
+            "company_name"
+        ],
+        "production_country": [
+            "movie_id",
+            "country_id"
+        ],
+        "movie_cast": [
+            "movie_id",
+            "person_id",
+            "character_name",
+            "gender_id",
+            "cast_order"
+        ],
+        "movie_keywords": [
+            "movie_id",
+            "keyword_id"
+        ],
+        "movie_company": [
+            "movie_id",
+            "company_id"
+        ]
+    },
+    "Result": [],
+    "subquestions": [],
+    "subSQLs": [],
+    "subResults": [],
+    "finalGeneratedQuery": [],
+    "oneTimeQuery": [
+        "SELECT department.department_name \nFROM movie_crew \nJOIN department ON movie_crew.department_id = department.department_id \nJOIN movie ON movie_crew.movie_id = movie.movie_id \nJOIN person ON movie_crew.person_id = person.person_id \nWHERE movie.title = 'Reign of Fire' AND person.person_name = 'Marcia Ross';"
+    ],
+    "entry_counter": 0,
+    "ForeignKeys": [
+        "# movie_genres.movie_id = movie.movie_id",
+        "# movie_genres.genre_id = genre.genre_id",
+        "# movie_languages.language_role_id = language_role.role_id",
+        "# movie_languages.movie_id = movie.movie_id",
+        "# movie_languages.language_id = language.language_id",
+        "# movie_crew.person_id = person.person_id",
+        "# movie_crew.movie_id = movie.movie_id",
+        "# movie_crew.department_id = department.department_id",
+        "# production_country.movie_id = movie.movie_id",
+        "# production_country.country_id = country.country_id",
+        "# movie_cast.person_id = person.person_id",
+        "# movie_cast.movie_id = movie.movie_id",
+        "# movie_cast.gender_id = gender.gender_id",
+        "# movie_keywords.keyword_id = keyword.None",
+        "# movie_keywords.movie_id = movie.None",
+        "# movie_company.company_id = production_company.None",
+        "# movie_company.movie_id = movie.None"
+    ]
+}

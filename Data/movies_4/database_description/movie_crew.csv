@@ -1,0 +1,9 @@
+original_column_name,column_name,column_description,data_format,value_description
+movie_id,movie id,"the id of the movie that the crew worked for
+Maps to movie(movie_id)",integer,
+person_id,person id,"the id of the crew
+Maps to person(person_id)",integer,
+department_id,department id,"the id of the crew's department
+Maps to department(department_id)",integer,
+job,,the job of the crew,text,"commonsense evidence:
+A movie may involve several crews with the same job title. "

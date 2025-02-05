@@ -1,0 +1,6 @@
+original_column_name,column_name,column_description,data_format,value_description
+movie_id,movie id,"the id of the movie 
+Maps to movie(movie_id)",integer,
+company_id,company id,"the id of the company that produced the movie
+Maps to production_company(company_id)",integer,"commonsense evidence:
+If movies with different movie_id have the same company_id, it means these movies were made by the same company. "

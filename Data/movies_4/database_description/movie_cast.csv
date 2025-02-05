@@ -1,0 +1,10 @@
+original_column_name,column_name,column_description,data_format,value_description
+movie_id,movie id,"the id of the movie
+Maps to movie(movie_id)",integer,
+person_id,person id,"the id of the person
+Maps to person(person_id)",integer,
+character_name,character name,the character name,text,
+gender_id,gender id,"the id of the cast's gender
+Maps to gender(gender_id)",integer,
+cast_order,cast order,the cast order of the cast,integer,"commonsense evidence:
+The cast order of a movie or television show refers to the sequence in which the actors and actresses are listed in the credits. This order is typically determined by the relative importance of each actor's role in the production, with the main actors and actresses appearing first, followed by the supporting cast and extras. "
