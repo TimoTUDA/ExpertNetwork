@@ -26,7 +26,12 @@ class DatabaseConnector:
             db_path = db_name
             conn = sqlite3.connect(db_path)
             cursor = conn.cursor()
-            cursor.execute(sql_query)
+            ###########
+            # Remove the ´´´sql formatting of OPENAI
+            clean_sql = re.sub(r"^```[a-zA-Z]*\n", "", sql_query)
+            # Remove the closing triple backticks at the end.
+            clean_sql = re.sub(r"\n```$", "", clean_sql)
+            cursor.execute(clean_sql)
             result = cursor.fetchall()
             #result will be a list of row tuples
         except sqlite3.Error as e:

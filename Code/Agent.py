@@ -1,9 +1,16 @@
 import Broker, DatabaseConnector
 from my_openai_utils import openai_execute
+from Utils import construct_request_dummy
 import json
 import os
 with open ("/home/timo/ExpertNetwork/environmentVariables.env") as file:
     os.environ["OPENAI_API_KEY"] = file.read().strip()
+
+# TODOs:
+# TODO Self-fixing loop of prompts
+# TODO Restating and resubmission of question into prompt.
+
+
 class Agent:
     def __init__(self, agent_id, db_path):
         self.agent_id = agent_id
@@ -137,7 +144,71 @@ class Agent:
             "# movie_company.movie_id = movie.None"
         ]
         }
-        
+        self.small_entry = {
+        "Database": "/home/timo/ExpertNetwork/Data/movies_4/movies_4.sqlite",
+        "SQL": "SELECT T4.department_name FROM movie AS T1 INNER JOIN movie_crew AS T2 ON T1.movie_id = T2.movie_id INNER JOIN person AS T3 ON T2.person_id = T3.person_id INNER JOIN department AS T4 ON T2.department_id = T4.department_id WHERE T3.person_name = 'Marcia Ross' AND T1.title = 'Reign of Fire'",
+        "join_count": 3,
+        "question": "For the movie \"Reign of Fire\", which department was Marcia Ross in?",
+        "evidence": "movie \"Reign of Fire\" refers to title = 'Reign of Fire'; which department refers to department_name",
+        "RelatedTables": {
+            "country": [
+                "country_id",
+                "country_iso_code",
+                "country_name"
+            ],
+            "department": [
+                "department_id",
+                "department_name"
+            ],
+            "keyword": [
+                "keyword_id",
+                "keyword_name"
+            ],
+            "movie": [
+                "movie_id",
+                "title",
+                "budget",
+                "homepage",
+                "overview",
+                "popularity",
+                "release_date",
+                "revenue",
+                "runtime",
+                "movie_status",
+                "tagline",
+                "vote_average",
+                "vote_count"
+            ],
+            "movie_genres": [
+                "movie_id",
+                "genre_id"
+            ],
+            "person": [
+                "person_id",
+                "person_name"
+            ],
+            "movie_crew": [
+                "movie_id",
+                "person_id",
+                "department_id",
+                "job"
+            ],
+            "production_company": [
+                "company_id",
+                "company_name"
+            ],
+            "production_country": [
+                "movie_id",
+                "country_id"
+            ],
+            "movie_company": [
+                "movie_id",
+                "company_id"
+            ]
+        },
+        "entry_counter": 0,
+        }
+        self.entry = self.small_entry
 
     def init_schema_information(self, manual_test=True, include_fks=False):
         # This should now connect to the database if it is not manually set
@@ -169,14 +240,7 @@ class Agent:
             # TODO connect to the db, get the schema information and then generate the nl
             pass
 
-        request_dummy = [{
-        "model": self.model,
-        "messages": [
-            {"role": "system", "content": nl_schema_prompt_system},
-            {"role": "user", "content": nl_schema_prompt},
-        ],
-        "max_tokens": 5000,
-        }]
+        request_dummy = construct_request_dummy(self.model, nl_schema_prompt_system, nl_schema_prompt)
 
         llm_answer = openai_execute(request_dummy, force=0.75)
         llm_response_text = llm_answer[0]['choices'][0]['message']['content']
@@ -200,7 +264,9 @@ class Agent:
         api_requests = []
         for question in self.unhandled_questions:
             C3_sys_prompt = """
-            ### You are now an excellent SQL writer. You do not make mistakes.
+            ### You are now an excellent SQL writer. You do not make mistakes. 
+            ### You format your responses with ```sql SELECT ... ```.
+            ### Alyways use "" around table and column names as well as a clear distinction what column of what table is referenced. Example: SELECT "nameTable"."name" FROM "nameTable";
             """
             #Start constructing the related table info prompt
             related_table_info = "### Complete sqlite SQL query only and with no explanation\n"
@@ -213,17 +279,11 @@ class Agent:
 
             #Add the SQL query question
             related_table_info += "#\n### " + question + "\n# SELECT "
-
-            request_dummy = {
-                "model": self.model,
-                "messages": [
-                    {"role": "system", "content": C3_sys_prompt},
-                    {"role": "user", "content": related_table_info},
-                ],
-                "max_tokens": 5000,
-            }
-            
+            request_dummy = construct_request_dummy(self.model, C3_sys_prompt, related_table_info)    
             api_requests.append(request_dummy)
+
+        if len(api_requests) == 1:
+            api_requests = api_requests[0] # This is because openai_execute assumes more than one query is it is []
 
         answers = openai_execute(api_requests, force=0.75)
         results = []
@@ -231,10 +291,12 @@ class Agent:
             llm_sql = answer['choices'][0]['message']['content']
             print(llm_sql)
             result = self.db_connector.runSQLQuery(llm_sql, self.entry)
+            print(f"Result from Agent{self.agent_id} : {result}")
             results.append(result)
         #self.unhandled_questions = []
 
         return self.unhandled_questions, results  
+    
             
         
         

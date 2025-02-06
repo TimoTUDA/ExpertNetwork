@@ -4,3 +4,4 @@ environmentVariables.env
 Analysis-Code/FilesToAnalyze-100/
 Analysis-Code/FilesByComponents/
 mytest2.json
+openai_cache/

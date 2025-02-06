@@ -123,6 +123,15 @@ _model_parameters = {  # TODO: update parameters according to the OpenAI project
         "cost_per_1k_output_tokens": 0.0006,
         "max_context": 128_000,
         "max_output_tokens": 4_096  # ?
+    },	
+    "o3-mini-2025-01-31": {
+        "chat_or_completion": "chat",
+        "max_rpm": 10_000,
+        "max_tpm": 15_000_000,
+        "cost_per_1k_input_tokens": 0.0011,
+        "cost_per_1k_output_tokens": 0.0044,
+        "max_context": 200_000,
+        "max_output_tokens": 100_000  # ?
     }
 }
 
@@ -144,6 +153,9 @@ class _Request:
     request: dict
 
     def __init__(self, request: dict) -> None:
+        #Added by timo:
+        if isinstance(request, list):
+            request = request[0]
         self.request = request
 
     @functools.cached_property
@@ -311,6 +323,9 @@ class _Response:
     response: dict
 
     def __init__(self, response: dict) -> None:
+        # Added by timo:
+        if isinstance(response, list):
+            response = response[0]
         self.response = response
 
     @functools.cached_property
