@@ -6,6 +6,9 @@ import os
 import DatabaseConnector
 with open ("/home/timo/ExpertNetwork/environmentVariables.env") as file:
     os.environ["OPENAI_API_KEY"] = file.read().strip()
+
+# TODO Slower breaking of the question. Start with a first question. give answer. Start with second question. ...
+
 class Broker:
     def __init__(self, num_agents, max_queries=20):
         self.agents = []
@@ -49,7 +52,7 @@ class Broker:
         - Identify the distinct pieces of information needed: movies produced by "Cruel and Unusual Films" and the popularity metric of those movies.
 
         2. **Decompose the Question into Subquestions:**  
-        - Break the complex question into 2–4 clear subquestions. For example:
+        - Break the complex question into at least 3 distinct and clear subquestions. For example:
             - "List all movie IDs and titles for movies produced by Cruel and Unusual Films by joining the production_company, movie_company, and movie tables."
             - "For the movie IDs obtained, what are the popularity values from the movie table?"
             - "Which movie, among the listed ones, has the highest popularity value?"
@@ -84,7 +87,10 @@ class Broker:
 
         **Note:** You may ask the same subquestion to multiple agents if it is relevant.
 
-        Now, process the complex question as instructed using the steps and example above.
+        # Now, process the complex question as instructed using the steps and example above.
+        
+        # You have to generate at least 3 distinct subquestions, and assign them to the appropriate agents based on their schema.
+
 
         """
         broker_selection_prompt = """

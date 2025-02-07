@@ -7,7 +7,7 @@ with open ("/home/timo/ExpertNetwork/environmentVariables.env") as file:
     os.environ["OPENAI_API_KEY"] = file.read().strip()
 
 # TODOs:
-# TODO Self-fixing loop of prompts
+# TODO Self-fixing loop of prompts -> Matching to question then necessary.
 # TODO Restating and resubmission of question into prompt.
 
 
@@ -206,7 +206,7 @@ class Agent:
                 "company_id"
             ]
         },
-        "entry_counter": 0,
+        "entry_counter": 0
         }
         self.entry = self.small_entry
 
@@ -292,10 +292,43 @@ class Agent:
             print(llm_sql)
             result = self.db_connector.runSQLQuery(llm_sql, self.entry)
             print(f"Result from Agent{self.agent_id} : {result}")
+            if isinstance(result, str) and result.startswith("An error"):
+                self.fix_error_results(llm_sql,result, 2)
             results.append(result)
         #self.unhandled_questions = []
 
         return self.unhandled_questions, results  
+    
+    def fix_error_results(self, sql_query, result="", max_retries=2):
+        updated_res = result
+        updated_sql = sql_query
+        tries = 1
+        fixer_system_prompt = """
+            ### You are now an excellent SQL writer. You do not make mistakes. Complete the SQL Lite query without explanation.
+            ### You format your responses with ```sql SELECT ... ```.
+            ### Alyways use "" around table and column names as well as a clear distinction what column of what table is referenced. Example: SELECT "nameTable"."name" FROM "nameTable";
+            """
+        while isinstance(updated_res, str) and updated_res.startswith("An error") and tries <= max_retries:
+            print(f"Error fixxing No. {tries}")
+            fixer_message = f"# The SQL query: {updated_sql} \n"
+            fixer_message += f"# Returned the Error: \n"
+            fixer_message += f"{result} \n"
+            fixer_message += "# Fix the query and return the new query. \n"
+            fixer_message += "This is the Database Schema:"
+            for related_table_name, columns in self.schema_information.items():
+                fixer_message += "# " + related_table_name + "("
+                fixer_message += ", ".join(columns) + ")\n"
+            #fixer_message += "# SELECT "
+            request_dummy = construct_request_dummy(self.model, fixer_system_prompt, fixer_message)
+            llm_answer = openai_execute(request_dummy, force=0.75)
+            llm_response_text = llm_answer[0]['choices'][0]['message']['content']
+            print("fixed Query: ", llm_response_text)
+            updated_sql = llm_response_text
+            updated_res = self.db_connector.runSQLQuery(updated_sql, self.entry)
+            tries += 1
+
+
+
     
             
         
