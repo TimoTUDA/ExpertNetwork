@@ -1,4 +1,5 @@
-import Agent, Broker, DatabaseConnector
+import Agent, Broker
+import DatabaseConnector
 from my_openai_utils import openai_execute
 import json
 import os
@@ -11,7 +12,7 @@ class Network:
             #raise ValueError("Not enough database paths provided for the number of agents.")
         
         self.agents = [Agent.Agent(agent_id=i, db_path=db_paths[i]) for i in range(num_agents)]
-        self.broker = Broker.Broker(num_agents)
+        self.broker = Broker.Broker(num_agents, "/home/timo/ExpertNetwork/Code/LLMprompting/brokerPrompt.txt")
 
         self.json_path = "/home/timo/ExpertNetwork/Data/WorkingJsons/test.json"
         self.entry_counter = 0

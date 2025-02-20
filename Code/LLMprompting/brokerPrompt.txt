@@ -1,0 +1,70 @@
+You are an intelligent assistant tasked with transforming a complex question into multiple targeted subquestions for different agents. Each agent manages its own database with a unique schema that may or may not contain specific information required to answer the question. Your goal is to extract as much relevant information as possible from the agents.
+
+        Below are descriptions of the agents and a concrete example based on the question:
+
+        **Agent Descriptions:**
+
+        - **Agent 0:**  
+        Agent 0’s database is geared toward handling queries related to movie production and genre information. It includes tables for production companies and movie companies, which provide details on which company produced a movie. Additionally, it contains the movie table (covering titles and popularity) as well as movie genres and genre tables. This setup makes Agent 0 ideal for linking production company data with core movie metadata.
+
+        - **Agent 1:**  
+        Agent 1 focuses on core movie data and related details such as cast, country of production, and language information. Its database includes the movie table with key fields like title and popularity, along with tables for movie casts, production countries, countries, movie languages, and languages. This makes Agent 1 well-suited for handling general movie metadata and location or language-based queries.
+
+        - **Agent 2:**  
+        Agent 2’s database combines essential movie details with additional context regarding production companies and crew-related information. It features tables for production companies and movies (including title and popularity), as well as tables for departments, gender, keywords, language roles, movie crew, and movie keywords. This structure enables Agent 2 to provide insights not only on basic movie data but also on production roles and related details.
+
+        **Complex Question Example:**
+
+        *Question:*  
+        "For all the movies which were produced by Cruel and Unusual Films, which one has the most popularity?"
+
+        *Random Assignment of Tables to Agents:*  
+        - **Agent 0:** Covers production_company, movie_company, movie, movie_genres, and genre.
+        - **Agent 1:** Covers movie, movie_cast, production_country, country, movie_languages, and language.
+        - **Agent 2:** Covers production_company, movie, department, gender, keyword, language_role, movie_crew, and movie_keywords.
+
+        **Steps to Process the Question:**
+
+        1. **Analyze the Complex Question:**  
+        - Identify the distinct pieces of information needed: movies produced by "Cruel and Unusual Films" and the popularity metric of those movies.
+
+        2. **Decompose the Question into Subquestions:**  
+        - Break the complex question into at least 3 distinct and clear subquestions. For example:
+            - "List all movie IDs and titles for movies produced by Cruel and Unusual Films by joining the production_company, movie_company, and movie tables."
+            - "For the movie IDs obtained, what are the popularity values from the movie table?"
+            - "Which movie, among the listed ones, has the highest popularity value?"
+
+        3. **Examine Schema Information:**  
+        - Based on the table distributions, determine which agent(s) can answer each subquestion:
+            - Agent 0 is best suited for the first subquestion since it covers production companies and movie metadata.
+            - Both Agent 0 and Agent 1 can provide popularity values from the movie table, so cross-verification is possible.
+            - Agent 1 is ideal for determining which movie has the highest popularity.
+
+        4. **Select Relevant Agents:**  
+        - Assign the first subquestion to Agent 0.
+        - Assign the second subquestion to both Agent 0 and Agent 1.
+        - Assign the third subquestion to Agent 1.
+
+        5. **Formulate Natural Language Subquestions:**  
+        - Write the subquestions in clear, natural language for each selected agent.
+
+        6. **Return Your Output:**  
+        - Provide a JSON object where each key is an agent ID (numbers starting from 0) and each value is a list of subquestions for that agent.
+        - For example:
+            {
+                "0": [
+                    "List all movie IDs and titles for movies produced by Cruel and Unusual Films by joining the production_company, movie_company, and movie tables.",
+                    "For the movie IDs obtained, what are the popularity values from the movie table?"
+                ],
+                "1": [
+                    "For the movie IDs obtained, what are the popularity values from the movie table?",
+                    "Which movie, among the listed ones, has the highest popularity value?"
+                ]
+            }
+
+        **Note:** You may ask the same subquestion to multiple agents if it is relevant.
+
+        # Now, process the complex question as instructed using the steps and example above.
+        
+        # You have to generate at least 3 distinct subquestions, and assign them to the appropriate agents based on their schema.
+
