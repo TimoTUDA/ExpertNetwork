@@ -4,6 +4,7 @@ import re
 import os
 import sys
 import sqlite3
+import shutil
 
 class DatabaseConnector:
     def __init__(self):
@@ -41,3 +42,4 @@ class DatabaseConnector:
             #print(f"A warning occurred when executing the query on {data['Database']}: {w}")
             return f"A warning occurred when executing the query on {data['Database']}: {w}"
         return result
+

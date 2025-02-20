@@ -4,8 +4,41 @@ from my_openai_utils import openai_execute
 import json
 import os
 import random
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Optional, Dict, Any, List
 with open ("/home/timo/ExpertNetwork/environmentVariables.env") as file:
     os.environ["OPENAI_API_KEY"] = file.read().strip()
+
+class MessageRole(Enum):
+    """Defines the high-level role or direction of the message."""
+    BROKER_TO_AGENT = "BROKER_TO_AGENT"
+    AGENT_TO_BROKER = "AGENT_TO_BROKER"
+    AGENT_TO_AGENT = "AGENT_TO_AGENT"
+    USER_TO_BROKER = "USER_TO_BROKER"
+    BROKER_TO_USER = "BROKER_TO_USER"  
+
+@dataclass
+class Message:
+    message_id: Optional[str] = None  # Unique ID for this message
+    _counter: int = field(init=False, default=0, repr=False)
+    conversation_id: str  # ID linking messages in the same conversation
+    sender: str  # e.g., "Broker", "SalesAgent", "MarketingAgent", or "User"
+    recipients: List[str]  # One or multiple agent names or "Broker" if reversed
+    role: MessageRole  # The direction/context of the message
+    content: str  # The core text or query
+
+    def __post_init__(self):
+        """
+        If message_id is not provided, auto-generate one using
+        the class-level counter and then increment the counter.
+        """
+        cls = type(self)
+        if self.message_id is None:
+            self.message_id = f"msg_{cls._counter}"
+            cls._counter += 1
+
+
 class Network:
     def __init__(self, num_agents, db_paths, question):
         #if len(db_paths) < num_agents:

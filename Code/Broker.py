@@ -1,6 +1,5 @@
 import Agent
 import DatabaseConnector
-from LLMprompting.test import Tester
 from my_openai_utils import openai_execute
 from Utils import construct_request_dummy
 from LLMprompting.requestHandling import construct_request_dummy, prepare_for_ollama
@@ -17,19 +16,29 @@ class Broker:
         self.agents = []
         self.unhandled_messages = []
         self.total_queries = 0
-        self.model = "gpt-4o-mini-2024-07-18"
-        #self.model = "deepseek-r1:70b"
+        #self.model = "gpt-4o-mini-2024-07-18"
+        self.model = "deepseek-r1:70b"
         #self.model = "o3-mini-2025-01-31"
         self.question_answers = {}
         self.prompt_file = prompt_file
         pass
 
-    def load_prompt(self, prompt_file):
+    def load_prompt(self, prompt_file, question):
         with open(prompt_file, 'r') as file:
-            return file.read()
+            prompt_template =  file.read()
+        
+        #    Example: "- Name: SalesAgent\n  Description: Sales DB\n"
+        agent_information_str = ""
+        for agent in self.agents:
+            agent_information_str += f"- Name: {agent.name}\n  Description: {agent.schema_information_nl}\n\n"
+            
+        prompt_with_agents = prompt_template.replace("<AGENT INFORMATION HERE>", agent_information_str.strip())
+        final_prompt = prompt_with_agents.replace("<USER QUESTION HERE>", question)
+
+        return final_prompt
 
     def select_agents(self, question):
-        broker_selection_system_prompt = self.load_prompt(self.prompt_file)
+        broker_selection_system_prompt = self.load_prompt(self.prompt_file, question)
         broker_selection_prompt = """
         ### Agent Information:
         """

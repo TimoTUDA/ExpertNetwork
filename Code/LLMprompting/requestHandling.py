@@ -58,41 +58,31 @@ def prepare_for_ollama(request: dict) -> dict:
             request["format"] = {
             "type": "object",
             "properties": {
-                "Option": {
-                    "type": "string",
-                    "enum": ["A", "B", "C", "Z"],
-                    "description": "Specifies which option is chosen, as defined in the instructions."
+                "agents_to_query": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                    "agent_name": {
+                        "type": "string",
+                        "description": "The name of the agent, exactly as used in the agent registry."
+                    },
+                    "reason": {
+                        "type": "string",
+                        "description": "A brief explanation of why this agent is relevant."
+                    }
+                    },
+                    "required": ["agent_name", "reason"],
+                    "additionalProperties": False
                 },
-                "thinking": {
-                    "type": "string",
-                    "description": "A chain-of-thought or explanation detailing your reasoning."
-                },
-                "Subquestion": {
-                    "type": "string",
-                    "description": "The subquestion generated. Required for Option A and Option B."
-                },
-                "Reasoning": {
-                    "type": "string",
-                    "description": "A concise reasoning for the chosen subquestion. Required for Option A."
-                },
-                "SubSQL": {
-                    "type": "string",
-                    "description": "The SQL query corresponding to the subquestion. Required for Option B."
-                },
-                "finalGeneratedQuery": {
-                    "type": "string",
-                    "description": "The final SQL query that answers the original question. Required for Option C."
+                "description": "A list of objects specifying which agents should be queried and why."
                 }
             },
-            "required": ["Option", "thinking"],
+            "required": ["agents_to_query"],
             "additionalProperties": False,
-            "description": (
-                "This JSON object is the output structure the model should generate. Depending on the "
-                "option chosen (A, B, C, or Z), the response should include the appropriate additional keys. "
-                "The 'thinking' property can be used to provide a chain-of-thought."
-            )
+            "description": "A simple JSON object containing an array of agents to query, each with name and reason."
             }
-    """
+            """
     return request
 
 def construct_request_dummy(model, system_prompt, first_message, output_tokens=3500):
